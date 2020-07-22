@@ -1,0 +1,11 @@
+{
+  "name": "pwa-study",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "https://github.com/roseline124/PWA-study",
+  "author": "roseline124",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.13.0"
+  }
+}
