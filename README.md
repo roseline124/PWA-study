@@ -83,7 +83,27 @@ if ("serviceWorker" in navigator) {
 
 **activate**
 
+- 오직 하나의 서비스워커만 activate될 수 있다.
 - 이전 서비스워커에 의해 컨트롤되는 페이지가 하나라도 열려있으면, 새로운 서비스워커는 `waiting` 상태에 들어간다. (새로고침한다고 해서 새로운 서비스워커로 넘어가는 건 아니다. 현재 페이지가 언마운트 되기 전에 새 페이지가 요청되므로 이전 서비스워커가 남아있는 상태기 때문이다. 따라서, 앱을 껐다 켜야만 새 서비스워커가 activate될 수 있다.)
+- installing 안에서 `self.skipWaiting();`을 실행하면 새 서비스워커가 `waiting`을 스킵하고 바로 activate된다.
+
+in `service-worker.js`
+
+```js
+// caching resources when installed
+self.addEventListener("install", (event) => {
+  console.log("Service worker installing...");
+  // Add a call to skipWaiting here
+  self.skipWaiting();
+  console.log("Service worker skip waiting...");
+});
+
+self.addEventListener("activate", (event) => {
+  console.log("Service worker activating...");
+});
+```
+
+새로고침하기 전 개발자도구에서 service worker를 unregister한다.
 
 ### Service Worker Event
 
