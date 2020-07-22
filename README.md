@@ -52,16 +52,38 @@ It can cover both web and app.
 
 ### Service Worker LifeCycle
 
-1. register
-   - service worker를 설치하려면, 자바스크립트 코드에서 서비스워커를 등록해야함
-   - registration은 브라우저에게 서비스워커가 어디에 위치했는지 알려줌
-   - 백그라운드에서 설치하기 시작한다.
-   - 이미 설치가 되어있다면 navigator.serviceWorker.register는 현재 active 상태인 서비스워커 객체를 리턴한다.
-   - `scope` : 서비스워커가 어떤 파일들을 컨트롤할 지 정한다. 기본적으로 서비스워커가 위치한 곳 이하의 경로는 모두 scope에 들어간다. 예를 들어, 서비스워커 파일이 루트에 있으면 모든 파일이 scope에 들어간다.
-2. install
-   - install event를 trigger한다. install 되는 동안 precaching을 할 수 있다.
-3. activate
-   - 이전 서비스워커에 의해 컨트롤되는 페이지가 하나라도 열려있으면, 새로운 서비스워커는 `waiting` 상태에 들어간다. (새로고침한다고 해서 새로운 서비스워커로 넘어가는 건 아니다. 현재 페이지가 언마운트 되기 전에 새 페이지가 요청되므로 이전 서비스워커가 남아있는 상태기 때문이다. 따라서, 앱을 껐다 켜야만 새 서비스워커가 activate될 수 있다.)
+**register**
+
+- service worker를 설치하려면, 자바스크립트 코드에서 서비스워커를 등록해야함
+- registration은 브라우저에게 서비스워커가 어디에 위치했는지 알려줌
+- 백그라운드에서 설치하기 시작한다.
+- 이미 설치가 되어있다면 navigator.serviceWorker.register는 현재 active 상태인 서비스워커 객체를 리턴한다.
+- `scope` : 서비스워커가 어떤 파일들을 컨트롤할 지 정한다. 기본적으로 서비스워커가 위치한 곳 이하의 경로는 모두 scope에 들어간다. 예를 들어, 서비스워커 파일이 루트에 있으면 모든 파일이 scope에 들어간다.
+
+in `index.html` script tag
+
+```js
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("service-worker.js")
+      .then((registration) => {
+        console.log("Service Worker is registered", registration);
+      })
+      .catch((err) => {
+        console.error("Registration failed:", err);
+      });
+  });
+}
+```
+
+**install**
+
+- install event를 trigger한다. install 되는 동안 precaching을 할 수 있다.
+
+**activate**
+
+- 이전 서비스워커에 의해 컨트롤되는 페이지가 하나라도 열려있으면, 새로운 서비스워커는 `waiting` 상태에 들어간다. (새로고침한다고 해서 새로운 서비스워커로 넘어가는 건 아니다. 현재 페이지가 언마운트 되기 전에 새 페이지가 요청되므로 이전 서비스워커가 남아있는 상태기 때문이다. 따라서, 앱을 껐다 켜야만 새 서비스워커가 activate될 수 있다.)
 
 ### Service Worker Event
 
