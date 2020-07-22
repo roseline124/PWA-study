@@ -109,3 +109,15 @@ self.addEventListener("activate", (event) => {
 
 - 서비스워커는 event driven하다
 - install, activate, message, fetch, push, sync 등의 이벤트가 있다.
+
+### Intercept network requests
+
+서비스워커는 웹앱과 네트워크 사이에서 프록시 역할을 할 수 있다.
+
+in `service-worker.js`
+
+```js
+self.addEventListener("fetch", (event) => {
+  console.log("Fetching:", event.request.url);
+});
+```
