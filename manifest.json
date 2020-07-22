@@ -1,0 +1,9 @@
+{
+  "short_name": "PWA",
+  "name": "PWA Study",
+  "start_url": "/",
+  "background_color": "#fff",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#3740ff"
+}
