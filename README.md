@@ -21,6 +21,9 @@ It can cover both web and app.
 
 ## Service Worker
 
+- https://developers.google.com/web/ilt/pwa/lab-scripting-the-service-worker
+- https://developers.google.com/web/ilt/pwa/lab-caching-files-with-service-worker
+
 ### Service Worker
 
 - 서비스워커는 프로그래밍 가능한 네트워크 프록시다.
@@ -119,5 +122,64 @@ in `service-worker.js`
 ```js
 self.addEventListener("fetch", (event) => {
   console.log("Fetching:", event.request.url);
+});
+```
+
+### Cache data
+
+서비스워커를 install할 때 precaching한 후, 네트워크 요청이 들어오면 요청을 가로채고 캐시로 응답한다.
+사용하지 않는 캐시는 제거할 수 있다.
+
+**precaching**
+
+```js
+const filesToCache = ["/", "styles/index.css", "index.html"];
+
+const staticCacheName = "pages-cache-v1";
+
+// caching resources when installed
+self.addEventListener("install", (event) => {
+  console.log("Service worker installing...");
+  self.skipWaiting();
+
+  console.log("Check Cache Storage in Application section");
+  event.waitUntil(
+    caches.open(staticCacheName).then((cache) => {
+      return cache.addAll(filesToCache);
+    })
+  );
+});
+```
+
+**serve files from cache**
+
+custom response를 생성하고 싶을 땐, `event.respondWith()`를 사용한다.
+코드를 수정한 후, 개발자도구로 오프라인 상태로 전환해서 확인한다.
+캐시에서 resource를 가져와서 응답한다.
+
+```js
+self.addEventListener("fetch", (event) => {
+  console.log("Fetch event for ", event.request.url);
+  event.respondWith(
+    caches
+      .match(event.request)
+      .then((response) => {
+        if (response) {
+          console.log("Found ", event.request.url, " in cache");
+          // TODO 5 - Respond with custom 404 page
+          return caches.open(staticCacheName).then((cache) => {
+            cache.put(event.request.url, response.clone());
+            return response;
+          });
+        }
+        console.log("Network request for ", event.request.url);
+        return fetch(event.request);
+
+        // TODO 4 - Add fetched files to the cache
+      })
+      .catch((error) => {
+        // TODO 6 - Respond with custom offline page
+      })
+  );
 });
 ```

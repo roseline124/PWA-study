@@ -1,15 +1,51 @@
+const filesToCache = [
+  '/',
+  'styles/index.css',
+  'index.html',
+];
+
+const staticCacheName = 'pages-cache-v1';
+
 // caching resources when installed
-self.addEventListener("install", (event) => {
+self.addEventListener('install', event => {
   console.log("Service worker installing...");
-  // Add a call to skipWaiting here
   self.skipWaiting();
-  console.log("Service worker skip waiting...");
+
+  console.log('Check Cache Storage in Application section');
+  event.waitUntil(
+    caches.open(staticCacheName)
+    .then(cache => {
+      return cache.addAll(filesToCache);
+    })
+  );
 });
 
 self.addEventListener("activate", (event) => {
   console.log("Service worker activating...");
 });
 
-self.addEventListener("fetch", (event) => {
-  console.log("Fetching:", event.request.url);
+self.addEventListener('fetch', event => {
+  console.log('Fetch event for ', event.request.url);
+  event.respondWith(
+    caches.match(event.request)
+    .then(response => {
+      if (response) {
+        console.log('Found ', event.request.url, ' in cache');
+        // TODO 5 - Respond with custom 404 page
+        return caches.open(staticCacheName).then(cache => {
+          cache.put(event.request.url, response.clone());
+          return response;
+        });
+      }
+      console.log('Network request for ', event.request.url);
+      return fetch(event.request)
+
+      // TODO 4 - Add fetched files to the cache
+
+    }).catch(error => {
+
+      // TODO 6 - Respond with custom offline page
+
+    })
+  );
 });
