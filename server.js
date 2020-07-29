@@ -6,7 +6,7 @@ const app = new Koa();
 
 app.use(serve(__dirname));
 app.use(async (ctx) => {
-  await send(ctx, "index.html");
+  await send(ctx, "src/index.html");
 });
 
 app.listen(3000, () => {
