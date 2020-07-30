@@ -4,9 +4,10 @@ const send = require("koa-send");
 
 const app = new Koa();
 
-app.use(serve(__dirname));
+app.use(serve(__dirname + "/build"));
+
 app.use(async (ctx) => {
-  await send(ctx, "src/index.html");
+  await send(ctx, "build/index.html");
 });
 
 app.listen(3000, () => {

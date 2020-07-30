@@ -6,12 +6,18 @@
   "author": "roseline124",
   "license": "MIT",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "copy": "copyfiles -u 1 src/**/**/* src/**/* src/* build",
+    "build": "npm run copy && workbox injectManifest workbox-config.js"
   },
   "dependencies": {
     "koa": "^2.13.0",
     "koa-router": "^9.1.0",
     "koa-send": "^5.0.1",
     "koa-static": "^5.0.0"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.3.0",
+    "workbox-cli": "^5.1.3"
   }
 }
