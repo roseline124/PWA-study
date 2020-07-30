@@ -9,9 +9,8 @@
   </head>
 
   <body>
-    <h1>PWA Example</h1>
+    <h1>오라오나롸</h1>
     <p>Hello PWA!</p>
-    <button id="pwa-install-button" onclick="handleClick()">install pwa</button>
   </body>
 
   <script>
@@ -29,28 +28,5 @@
           });
       });
     }
-
-    let deferredPrompt;
-
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-    });
-
-    const buttonInstall = window?.document?.querySelector(
-      "#pwa-install-button"
-    );
-
-    const handleClick = (e) => {
-      console.log("click");
-      deferredPrompt?.prompt("Install this app! Click install button");
-      deferredPrompt?.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === "accepted") {
-          console.log("User accepted the install prompt");
-        } else {
-          console.log("User dismissed the install prompt");
-        }
-      });
-    };
   </script>
 </html>
