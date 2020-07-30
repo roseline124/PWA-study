@@ -11,11 +11,69 @@
   - Helpful debugging
   - Greater flexibility and feature set than sw-precache and sw-toolbox
 
+### before & after
+
+1. workbox를 쓰기 전 service-worker.js
+
+install, activate, fetch를 수동으로 구현해줘야 한다.
+
+```js
+const filesToCache = ["/", "styles/index.css", "index.html"];
+
+const staticCacheName = "pages-cache-v1";
+
+// caching resources when installed
+self.addEventListener("install", (event) => {
+  console.log("Service worker installing...");
+  self.skipWaiting();
+
+  console.log("Check Cache Storage in Application section");
+  event.waitUntil(
+    caches.open(staticCacheName).then((cache) => {
+      return cache.addAll(filesToCache);
+    })
+  );
+});
+
+self.addEventListener("activate", (event) => {
+  console.log("Service worker activating...");
+});
+
+self.addEventListener("fetch", (event) => {
+  console.log("Fetch event for ", event.request.url);
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      if (response) {
+        console.log("Found ", event.request.url, " in cache");
+        return caches.open(staticCacheName).then((cache) => {
+          cache.put(event.request.url, response.clone());
+          return response;
+        });
+      }
+      console.log("Network request for ", event.request.url);
+      return fetch(event.request);
+    })
+  );
+});
+```
+
+2. workbox를 쓰는 servie-worker.js
+
+```js
+importScripts(
+  "https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js"
+);
+
+workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
+```
+
 ### import && precache
 
 1. cdn으로 workbox import
 
 웹팩으로 번들링할 필요가 없어 가장 간편하게 import할 수 있다.
+
+`workbox-sw.js`
 
 ```js
 importScripts(
@@ -29,7 +87,9 @@ if (workbox) {
 }
 ```
 
-- precache할 파일을 service worker에 수동으로 넣어준다.
+- precache할 파일을 service worker에 수동으로 넣어준다. 혹은 cli를 사용해 자동으로 넣어줄 수 있다.
+
+`service-worker.js`
 
 ```js
 importScripts(
@@ -62,6 +122,20 @@ yarn start
 "build": "npm run copy && workbox injectManifest workbox-config.js"
 ```
 
+- `webpack-config.js` 추가
+
+`globPatterns` 을 수정하면, 캐싱할 파일들을 업데이트할 수 있다.
+`workbox injectManifest` 커맨드 실행하면, 바뀐 workbox-config.js을 업데이트 가능
+
+```js
+module.exports = {
+  globDirectory: "build/",
+  globPatterns: ["**/*.{html, js, json}"],
+  swDest: "build/service-worker.js",
+  swSrc: "src/service-worker.js",
+};
+```
+
 - src/service-worker.js에 추가
 
 ```js
@@ -88,7 +162,7 @@ revision은 workbox가 자동으로 만들어준 값이다.
 - bundling
   - 빌드된 service-worker가 쓰는 es6 문법은 브라우저에서 알아들을 수 없으므로 따로 번들링해줘야 한다.
   - rollup, webpack 등 사용
-- cdn보다는 import 방식이 복잡하지만, build만 하면 자동으로 캐시파일들을 생성해준다는 장점이 있다.
+- build만 하면 자동으로 캐시파일들을 생성해준다는 장점이 있다.
 
 ### 캐싱 전략
 
