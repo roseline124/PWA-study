@@ -20,7 +20,8 @@
 - 크롬
 
   - 웹앱이 설치되지 않은 상태
-  - 유저의 활동이 있어야 함(Meets a user engagement heuristic (이전에는 사용자가 최소 30 초 동안 도메인과 상호 작용해야했지만 더 이상 요구 사항이 아님))
+    - 이미 설치된 상태라면, `chrome://apps/` 에서 앱 삭제
+  - 유저의 활동이 있어야 함(Meets a user engagement heuristic (이전에는 사용자가 최소 30 초 동안 도메인과 상호 작용해야했지만 더 이상 요구 사항이 아님 / 2번 정도는 방문해야 기준이 충족되는 듯하다.)
   - https 도메인
   - manifest 파일에 아래 property들이 필요
     - `short_name` or `name`
@@ -57,16 +58,20 @@
 
 2. listen & save
 
-```jsx
+index.html
+
+```html
+<button id="pwa-install-button" onclick="handleClick()">install pwa</button>
+```
+
+script tag in index.html
+
+```js
 let deferredPrompt;
 
 window.addEventListener("beforeinstallprompt", (e) => {
-  // Prevent the mini-infobar from appearing on mobile
   e.preventDefault();
-  // Stash the event so it can be triggered later.
   deferredPrompt = e;
-  // Update UI notify the user they can install the PWA
-  showInstallPromotion();
 });
 ```
 
@@ -75,28 +80,29 @@ window.addEventListener("beforeinstallprompt", (e) => {
 - `prompt()` 는 deferredEvent에서 한 번만 호출할 수 있다.
 - 만약 유저가 설치를 거절하면, `beforeinstallprompt` 이벤트가 다시 발생할 때까지 기다려야 한다.
 
-```jsx
-buttonInstall.addEventListener("click", (e) => {
-  // Hide the app provided install promotion
-  hideMyInstallPromotion();
-  // Show the install prompt
-  deferredPrompt.prompt();
-  // Wait for the user to respond to the prompt
-  deferredPrompt.userChoice.then((choiceResult) => {
+script tag in index.html
+
+```js
+const buttonInstall = window?.document?.querySelector("#pwa-install-button");
+
+const handleClick = (e) => {
+  console.log("click");
+  deferredPrompt?.prompt("Install this app! Click install button");
+  deferredPrompt?.userChoice.then((choiceResult) => {
     if (choiceResult.outcome === "accepted") {
       console.log("User accepted the install prompt");
     } else {
       console.log("User dismissed the install prompt");
     }
   });
-});
+};
 ```
 
 4. `appinstalled` 이벤트
 
 - PWA를 주소 바나, 다른 브라우저 컴포넌트에서 설치하게 하려는 경우 `appinstalled` 이벤트를 활용한다.
 
-```jsx
+```js
 self.addEventListener("appinstalled", (e) => {
   console.log("install success");
 });
