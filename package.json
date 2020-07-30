@@ -5,7 +5,13 @@
   "repository": "https://github.com/roseline124/PWA-study",
   "author": "roseline124",
   "license": "MIT",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
-    "koa": "^2.13.0"
+    "koa": "^2.13.0",
+    "koa-router": "^9.1.0",
+    "koa-send": "^5.0.1",
+    "koa-static": "^5.0.0"
   }
 }
