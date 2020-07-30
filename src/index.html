@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/manifest.json" rel="manifest" />
+    <link href="styles/index.css" rel="stylesheet" />
+    <title>PWA study</title>
+  </head>
+
+  <body>
+    <h1>PWA Example</h1>
+    <p>Hello PWA!</p>
+    <button id="pwa-install-button" onclick="handleClick()">install pwa</button>
+  </body>
+
+  <script>
+    // Register
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("../service-worker.js")
+          .then((registration) => {
+            // run after register -> install -> activate
+            console.log("Service Worker is registered", registration);
+          })
+          .catch((err) => {
+            console.error("Registration failed:", err);
+          });
+      });
+    }
+
+    let deferredPrompt;
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    const buttonInstall = window?.document?.querySelector(
+      "#pwa-install-button"
+    );
+
+    const handleClick = (e) => {
+      console.log("click");
+      deferredPrompt?.prompt("Install this app! Click install button");
+      deferredPrompt?.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === "accepted") {
+          console.log("User accepted the install prompt");
+        } else {
+          console.log("User dismissed the install prompt");
+        }
+      });
+    };
+  </script>
+</html>
