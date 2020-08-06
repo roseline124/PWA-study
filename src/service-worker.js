@@ -3,3 +3,12 @@ importScripts(
 );
 
 workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
+
+self.addEventListener("push", function (event) {
+  const payload = event.data ? event.data.text() : "no payload";
+  event.waitUntil(
+    self.registration.showNotification("pwa study push", {
+      body: payload,
+    })
+  );
+});
