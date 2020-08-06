@@ -12,45 +12,37 @@
     <h1>PWA Example</h1>
     <p>Hello PWA!</p>
     <button id="pwa-install-button" onclick="handleClick()">install pwa</button>
+    <button id="pwa-notification-button" onclick="handleNotify()">
+      notify me
+    </button>
+    
+    <hr>
+
+    <div>
+      <h3>push notification</h3>
+      <div>
+        <p>message</p>
+        <input id="pwa-push-payload"></input>
+      </div>
+      <div>
+        <p>delay</p>
+        <input id="pwa-push-delay" value="0"></input>
+      </div>
+      <div>
+        <p>time to leave</p>
+        <input id="pwa-push-ttl" value="0"></input>
+      </div>
+      
+
+    </div>
+
+    <button id="pwa-push-button">
+      push notification to me
+    </button>
   </body>
 
-  <script>
-    // Register
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("./service-worker.js")
-          .then((registration) => {
-            // run after register -> install -> activate
-            console.log("Service Worker is registered", registration);
-          })
-          .catch((err) => {
-            console.error("Registration failed:", err);
-          });
-      });
-    }
-
-    let deferredPrompt;
-
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-    });
-
-    const buttonInstall = window?.document?.querySelector(
-      "#pwa-install-button"
-    );
-
-    const handleClick = (e) => {
-      console.log("click");
-      deferredPrompt?.prompt("Install this app! Click install button");
-      deferredPrompt?.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === "accepted") {
-          console.log("User accepted the install prompt");
-        } else {
-          console.log("User dismissed the install prompt");
-        }
-      });
-    };
-  </script>
+  <script src="js/tools.js"></script>
+  <script src="js/register.js"></script>
+  <script src="js/install.js"></script>
+  <script src="js/notification.js"></script>
 </html>
