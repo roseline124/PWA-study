@@ -12,6 +12,9 @@
     <h1>PWA Example</h1>
     <p>Hello PWA!</p>
     <button id="pwa-install-button" onclick="handleClick()">install pwa</button>
+    <button id="pwa-notification-button" onclick="handleNotify()">
+      notify me
+    </button>
   </body>
 
   <script>
@@ -42,7 +45,6 @@
     );
 
     const handleClick = (e) => {
-      console.log("click");
       deferredPrompt?.prompt("Install this app! Click install button");
       deferredPrompt?.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === "accepted") {
@@ -53,4 +55,5 @@
       });
     };
   </script>
+  <script src="js/notification.js"></script>
 </html>
