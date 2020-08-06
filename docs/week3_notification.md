@@ -1,4 +1,4 @@
-### references
+# references
 
 - [push notification tutorial](https://developers.google.com/web/fundamentals/codelabs/push-notifications?hl=ko)
 - [push notification](https://developer.mozilla.org/ko/docs/Web/Progressive_web_apps/Re-engageable_Notifications_Push)
@@ -6,7 +6,7 @@
 - [notification example repository](https://github.com/girliemac/html5-notifications-webOS-style/blob/master/js/notification.js)
 - [notification이 브라우저에 안 뜰 때](https://stackoverflow.com/questions/53011652/desktop-notification-not-appearing-in-chrome)
 
-### 알림 (Notifications)
+# 알림 (Notifications)
 
 - 알림 권한 허용 요청이 바로 뜨는 것은 안 좋고, 버튼을 누른다든지 어떤 페이지를 간다든지 이벤트가 발생했을 때 요청하는 것이 좋다. (과거 푸시 알림 악용 사례 때문에, 브라우저에서는 상호작용이 일어났을 때만 알림을 발생시키도록 한다.)
 - Notifications API는 운영체제의 알림 기능을 사용한다. 사용자가 웹 앱을 보고있지않더라도 알림을 보여줄 수 있다.
