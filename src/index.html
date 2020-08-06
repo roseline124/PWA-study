@@ -15,8 +15,33 @@
     <button id="pwa-notification-button" onclick="handleNotify()">
       notify me
     </button>
+    
+    <hr>
+
+    <div>
+      <h3>push notification</h3>
+      <div>
+        <p>message</p>
+        <input id="pwa-push-payload"></input>
+      </div>
+      <div>
+        <p>delay</p>
+        <input id="pwa-push-delay" value="0"></input>
+      </div>
+      <div>
+        <p>time to leave</p>
+        <input id="pwa-push-ttl" value="0"></input>
+      </div>
+      
+
+    </div>
+
+    <button id="pwa-push-button">
+      push notification to me
+    </button>
   </body>
 
+  <script src="js/tools.js"></script>
   <script src="js/register.js"></script>
   <script src="js/install.js"></script>
   <script src="js/notification.js"></script>
